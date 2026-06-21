@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/network_exception.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../data/models/user_model.dart';
 import '../../data/repository/user_repository_impl.dart';
 import '../../logic/user_list_cubit.dart';
 import '../../logic/user_list_state.dart';
+import '../screens/user_detail_screen.dart';
 import '../widgets/user_list_status_body.dart';
 import '../widgets/user_list_tile.dart';
 import '../widgets/user_search_field.dart';
@@ -79,10 +81,13 @@ class _UserListLoadedBody extends StatelessWidget {
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: visibleUsers.length,
                     separatorBuilder: (context, index) => const Divider(height: 1),
-                    itemBuilder: (context, index) => UserListTile(
-                      user: visibleUsers[index],
-                      onTap: () {},
-                    ),
+                    itemBuilder: (context, index) {
+                      final user = visibleUsers[index];
+                      return UserListTile(
+                        user: user,
+                        onTap: () => _openUserDetail(context, user),
+                      );
+                    },
                   ),
           ),
         ),
@@ -100,5 +105,13 @@ class _UserListLoadedBody extends StatelessWidget {
         );
       }
     }
+  }
+
+  void _openUserDetail(BuildContext context, UserModel user) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => UserDetailScreen(user: user),
+      ),
+    );
   }
 }
