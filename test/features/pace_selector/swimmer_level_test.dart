@@ -20,7 +20,7 @@ void main() {
 
     test('returns beginner above 2:00', () {
       expect(swimmerLevelFromSeconds(121), SwimmerLevel.beginner);
-      expect(swimmerLevelFromSeconds(300), SwimmerLevel.beginner);
+      expect(swimmerLevelFromSeconds(240), SwimmerLevel.beginner);
     });
   });
 }

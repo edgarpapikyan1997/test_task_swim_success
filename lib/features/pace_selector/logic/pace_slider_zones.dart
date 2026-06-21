@@ -8,29 +8,32 @@ enum PaceSliderZone {
 }
 
 PaceSliderZone resolveZone(int totalSeconds) {
-  final ticks = PaceInputConstants.sliderTickSeconds;
-  if (totalSeconds < ticks[0]) {
+  final bounds = PaceInputConstants.sliderZoneBoundarySeconds;
+  if (totalSeconds < bounds[0]) {
     return PaceSliderZone.elite;
   }
-  if (totalSeconds < ticks[1]) {
+  if (totalSeconds < bounds[1]) {
     return PaceSliderZone.advanced;
   }
-  if (totalSeconds < ticks[2]) {
+  if (totalSeconds < bounds[2]) {
     return PaceSliderZone.intermediate;
   }
   return PaceSliderZone.beginner;
 }
 
 (int startSeconds, int endSeconds) zoneBounds(PaceSliderZone zone) {
-  final ticks = PaceInputConstants.sliderTickSeconds;
+  final bounds = PaceInputConstants.sliderZoneBoundarySeconds;
   return switch (zone) {
     PaceSliderZone.elite => (
         PaceInputConstants.minTotalSeconds,
-        ticks[0],
+        bounds[0],
       ),
-    PaceSliderZone.advanced => (ticks[0], ticks[1]),
-    PaceSliderZone.intermediate => (ticks[1], ticks[2]),
-    PaceSliderZone.beginner => (ticks[2], PaceInputConstants.maxTotalSeconds),
+    PaceSliderZone.advanced => (bounds[0], bounds[1]),
+    PaceSliderZone.intermediate => (bounds[1], bounds[2]),
+    PaceSliderZone.beginner => (
+        bounds[2],
+        PaceInputConstants.maxTotalSeconds,
+      ),
   };
 }
 
