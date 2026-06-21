@@ -10,5 +10,7 @@ void main() {
     expect(find.text('MIN : SEC / 100M'), findsOneWidget);
     expect(find.text('01'), findsOneWidget);
     expect(find.text('30'), findsOneWidget);
+    expect(find.text('Advanced'), findsWidgets);
+    expect(find.text('1:30'), findsOneWidget);
   });
 }

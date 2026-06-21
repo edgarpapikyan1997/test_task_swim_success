@@ -13,41 +13,53 @@ class PaceCubit extends Cubit<PaceState> {
     if (_input.minutes >= PaceInputConstants.maxMinutes) {
       return;
     }
-    emit(_input.copyWith(minutes: _input.minutes + 1));
+    _emitTime(_input.minutes + 1, _input.seconds);
   }
 
   void decrementMinutes() {
     if (_input.minutes <= PaceInputConstants.minMinutes) {
       return;
     }
-    emit(_input.copyWith(minutes: _input.minutes - 1));
+    _emitTime(_input.minutes - 1, _input.seconds);
   }
 
   void incrementSeconds() {
     if (_input.seconds >= PaceInputConstants.maxSeconds) {
       if (_input.minutes < PaceInputConstants.maxMinutes) {
-        emit(_input.copyWith(minutes: _input.minutes + 1, seconds: 0));
+        _emitTime(_input.minutes + 1, 0);
       }
       return;
     }
-    emit(_input.copyWith(seconds: _input.seconds + 1));
+    _emitTime(_input.minutes, _input.seconds + 1);
   }
 
   void decrementSeconds() {
     if (_input.seconds <= PaceInputConstants.minSeconds) {
       if (_input.minutes > PaceInputConstants.minMinutes) {
-        emit(_input.copyWith(minutes: _input.minutes - 1, seconds: 59));
+        _emitTime(_input.minutes - 1, 59);
       }
       return;
     }
-    emit(_input.copyWith(seconds: _input.seconds - 1));
+    _emitTime(_input.minutes, _input.seconds - 1);
   }
 
   void setMinutes(int value) {
-    emit(_input.copyWith(minutes: clampMinutes(value)));
+    _emitTime(clampMinutes(value), _input.seconds);
   }
 
   void setSeconds(int value) {
-    emit(_input.copyWith(seconds: clampSeconds(value)));
+    _emitTime(_input.minutes, clampSeconds(value));
+  }
+
+  void setTotalSeconds(int value) {
+    final clamped = clampTotalSeconds(value);
+    final (minutes, seconds) = secondsToMinutesAndSeconds(clamped);
+    emit(PaceInputState(minutes: minutes, seconds: seconds));
+  }
+
+  void _emitTime(int minutes, int seconds) {
+    final clamped = clampTotalSeconds(totalSeconds(minutes, seconds));
+    final (m, s) = secondsToMinutesAndSeconds(clamped);
+    emit(PaceInputState(minutes: m, seconds: s));
   }
 }

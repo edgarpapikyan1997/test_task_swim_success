@@ -5,6 +5,12 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../logic/pace_cubit.dart';
 import '../../logic/pace_state.dart';
+import '../theme/swimmer_level_colors.dart';
+import '../widgets/pace_level_display.dart';
+import '../widgets/pace_level_tabs.dart';
+import '../widgets/pace_progress_bar.dart';
+import '../widgets/pace_screen_header.dart';
+import '../widgets/pace_slider.dart';
 import '../widgets/pace_time_display.dart';
 
 class PaceSelectorScreen extends StatelessWidget {
@@ -30,12 +36,17 @@ class _PaceSelectorView extends StatelessWidget {
           builder: (context, state) {
             final input = state as PaceInputState;
             final cubit = context.read<PaceCubit>();
+            final accent = SwimmerLevelColors.accentFor(input.swimmerLevel);
 
-            return Padding(
+            return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.md),
+                  const PaceProgressBar(),
+                  const SizedBox(height: AppSpacing.xl),
+                  const PaceScreenHeader(),
+                  const SizedBox(height: AppSpacing.xl),
                   Text('YOUR PACE', style: AppTextStyles.label),
                   const SizedBox(height: AppSpacing.lg),
                   PaceTimeDisplay(
@@ -50,6 +61,17 @@ class _PaceSelectorView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text('MIN : SEC / 100M', style: AppTextStyles.caption),
+                  const SizedBox(height: AppSpacing.xl),
+                  PaceLevelDisplay(level: input.swimmerLevel),
+                  const SizedBox(height: AppSpacing.lg),
+                  PaceLevelTabs(activeLevel: input.swimmerLevel),
+                  const SizedBox(height: AppSpacing.lg),
+                  PaceSlider(
+                    totalSeconds: input.totalSecondsValue,
+                    accentColor: accent,
+                    onChanged: cubit.setTotalSeconds,
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
                 ],
               ),
             );
