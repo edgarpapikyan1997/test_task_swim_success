@@ -5,6 +5,7 @@ import '../../../../core/constants/app_messages.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_background.dart';
+import '../../../../core/widgets/dismiss_keyboard_on_tap.dart';
 import '../../../user_list/presentation/screens/user_list_screen.dart';
 import '../../data/repository/pace_repository_impl.dart';
 import '../../logic/pace_cubit.dart';
@@ -78,11 +79,14 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
                 children: [
                   const PaceAppBar(),
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg,
-                      ),
-                      child: Column(
+                    child: DismissKeyboardOnTap(
+                      child: SingleChildScrollView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.lg,
+                        ),
+                        child: Column(
                         children: [
                           const SizedBox(height: AppSpacing.sm),
                           const StepProgressIndicator(
@@ -139,6 +143,7 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
                         ],
                       ),
                     ),
+                  ),
                   ),
                 ],
               ),

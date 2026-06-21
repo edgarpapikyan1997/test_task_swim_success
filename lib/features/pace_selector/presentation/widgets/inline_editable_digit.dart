@@ -78,6 +78,7 @@ class _InlineEditableDigitState extends State<InlineEditableDigit> {
     if (parsed != null) {
       widget.onSubmitted(parsed);
     }
+    _focusNode.unfocus();
     setState(() => _isEditing = false);
   }
 
@@ -115,6 +116,7 @@ class _InlineEditableDigitState extends State<InlineEditableDigit> {
         isDense: true,
       ),
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onTapOutside: (_) => _commitValue(),
       onSubmitted: (_) => _commitValue(),
     );
   }
