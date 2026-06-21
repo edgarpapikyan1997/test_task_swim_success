@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
+import 'features/pace_selector/presentation/screens/pace_selector_screen.dart';
 
 void main() {
   runApp(const SwimSuccessApp());
@@ -16,23 +16,7 @@ class SwimSuccessApp extends StatelessWidget {
       title: 'Swim Success',
       theme: AppTheme.dark,
       debugShowCheckedModeBanner: false,
-      home: const _ScaffoldPlaceholder(),
-    );
-  }
-}
-
-class _ScaffoldPlaceholder extends StatelessWidget {
-  const _ScaffoldPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Swim Success',
-          style: TextStyle(color: AppColors.textPrimary),
-        ),
-      ),
+      home: const PaceSelectorScreen(),
     );
   }
 }
