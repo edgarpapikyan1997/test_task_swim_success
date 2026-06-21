@@ -11,6 +11,8 @@ abstract final class PaceUiConstants {
   static const double levelTabUnderlineWidth = 48;
   static const double levelTabUnderlineHeight = 2;
   static const double onboardingProgress = 0.25;
+  static const double stepSegmentHeight = 4;
+  static const double stepSegmentRadius = 2;
   static const double accentOverlayAlpha = 0.12;
   static const double tickLabelAlpha = 0.8;
   static const double disabledButtonAlpha = 0.5;

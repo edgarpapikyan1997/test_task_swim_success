@@ -7,7 +7,7 @@ abstract final class SwimmerLevelColors {
   static Color accentFor(SwimmerLevel level) => switch (level) {
         SwimmerLevel.elite => const Color(0xFFFF9800),
         SwimmerLevel.advanced => const Color(0xFF42A5F5),
-        SwimmerLevel.intermediate => const Color(0xFF66BB6A),
+        SwimmerLevel.intermediate => AppColors.levelIntermediate,
         SwimmerLevel.beginner => AppColors.textPrimary,
       };
 

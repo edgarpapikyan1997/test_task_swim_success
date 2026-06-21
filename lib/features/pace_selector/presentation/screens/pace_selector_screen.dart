@@ -14,7 +14,7 @@ import '../widgets/pace_app_bar.dart';
 import '../widgets/pace_continue_button.dart';
 import '../widgets/pace_level_display.dart';
 import '../widgets/pace_level_tabs.dart';
-import '../widgets/pace_progress_bar.dart';
+import '../widgets/step_progress_indicator.dart';
 import '../widgets/pace_screen_header.dart';
 import '../widgets/pace_skip_link.dart';
 import '../widgets/pace_slider.dart';
@@ -85,7 +85,10 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
                       child: Column(
                         children: [
                           const SizedBox(height: AppSpacing.sm),
-                          const PaceProgressBar(),
+                          const StepProgressIndicator(
+                            stepCount: 6,
+                            activeStep: 5,
+                          ),
                   const SizedBox(height: AppSpacing.xl),
                   const PaceScreenHeader(),
                   const SizedBox(height: AppSpacing.xl),
