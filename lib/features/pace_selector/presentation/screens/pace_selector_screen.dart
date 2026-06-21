@@ -10,6 +10,7 @@ import '../../data/repository/pace_repository_impl.dart';
 import '../../logic/pace_cubit.dart';
 import '../../logic/pace_state.dart';
 import '../theme/swimmer_level_colors.dart';
+import '../widgets/pace_app_bar.dart';
 import '../widgets/pace_continue_button.dart';
 import '../widgets/pace_level_display.dart';
 import '../widgets/pace_level_tabs.dart';
@@ -73,12 +74,18 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
           backgroundColor: Colors.transparent,
           body: AppBackground(
             child: SafeArea(
-              child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const SizedBox(height: AppSpacing.md),
-                  const PaceProgressBar(),
+                  const PaceAppBar(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                      ),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: AppSpacing.sm),
+                          const PaceProgressBar(),
                   const SizedBox(height: AppSpacing.xl),
                   const PaceScreenHeader(),
                   const SizedBox(height: AppSpacing.xl),
@@ -126,11 +133,14 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
                         : _skipPace,
                   ),
                   const SizedBox(height: AppSpacing.lg),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-        ),
         );
       },
     );
