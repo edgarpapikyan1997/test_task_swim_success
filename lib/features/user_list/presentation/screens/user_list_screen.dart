@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/network_exception.dart';
 import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repository/user_repository_impl.dart';
 import '../../logic/user_list_cubit.dart';
@@ -31,8 +32,10 @@ class _UserListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: const Text('Users')),
-      body: BlocBuilder<UserListCubit, UserListState>(
+      body: AppBackground(
+        child: BlocBuilder<UserListCubit, UserListState>(
         builder: (context, state) {
           return switch (state) {
             UserListLoading() => const UserListLoadingBody(),
@@ -43,6 +46,7 @@ class _UserListView extends StatelessWidget {
             UserListLoaded() => _UserListLoadedBody(state: state),
           };
         },
+        ),
       ),
     );
   }

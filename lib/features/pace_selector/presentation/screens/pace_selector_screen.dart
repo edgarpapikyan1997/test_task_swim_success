@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_messages.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../../user_list/presentation/screens/user_list_screen.dart';
 import '../../data/repository/pace_repository_impl.dart';
 import '../../logic/pace_cubit.dart';
@@ -69,8 +70,10 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
         final accent = SwimmerLevelColors.accentFor(state.swimmerLevel);
 
         return Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
+          backgroundColor: Colors.transparent,
+          body: AppBackground(
+            child: SafeArea(
+              child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
@@ -127,6 +130,7 @@ class _PaceSelectorViewState extends State<_PaceSelectorView> {
               ),
             ),
           ),
+        ),
         );
       },
     );

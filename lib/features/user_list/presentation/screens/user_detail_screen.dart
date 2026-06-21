@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../data/models/user_model.dart';
 import '../widgets/user_detail_section.dart';
 
@@ -13,8 +14,10 @@ class UserDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(title: Text(user.name)),
-      body: ListView(
+      body: AppBackground(
+        child: ListView(
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           Text(user.username, style: AppTextStyles.caption),
@@ -44,6 +47,7 @@ class UserDetailScreen extends StatelessWidget {
             ],
           ),
         ],
+        ),
       ),
     );
   }
