@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/app_messages.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../user_list/presentation/screens/user_list_screen.dart';
@@ -29,8 +30,15 @@ class PaceSelectorScreen extends StatelessWidget {
   }
 }
 
-class _PaceSelectorView extends StatelessWidget {
+class _PaceSelectorView extends StatefulWidget {
   const _PaceSelectorView();
+
+  @override
+  State<_PaceSelectorView> createState() => _PaceSelectorViewState();
+}
+
+class _PaceSelectorViewState extends State<_PaceSelectorView> {
+  bool _isNavigating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +48,7 @@ class _PaceSelectorView extends StatelessWidget {
       listener: (context, state) {
         if (state is PaceSubmitSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Pace saved successfully.')),
+            const SnackBar(content: Text(AppMessages.paceSaved)),
           );
         }
         if (state is PaceSubmitError) {
@@ -73,29 +81,33 @@ class _PaceSelectorView extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xl),
                   Text('YOUR PACE', style: AppTextStyles.label),
                   const SizedBox(height: AppSpacing.lg),
-                  PaceTimeDisplay(
-                    minutes: state.minutes,
-                    seconds: state.seconds,
-                    onMinutesChanged: cubit.setMinutes,
-                    onSecondsChanged: cubit.setSeconds,
-                    onIncrementMinutes: cubit.incrementMinutes,
-                    onDecrementMinutes: cubit.decrementMinutes,
-                    onIncrementSeconds: cubit.incrementSeconds,
-                    onDecrementSeconds: cubit.decrementSeconds,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text('MIN : SEC / 100M', style: AppTextStyles.caption),
-                  const SizedBox(height: AppSpacing.xl),
-                  PaceLevelDisplay(level: state.swimmerLevel),
-                  const SizedBox(height: AppSpacing.lg),
-                  PaceLevelTabs(activeLevel: state.swimmerLevel),
-                  const SizedBox(height: AppSpacing.lg),
                   AbsorbPointer(
                     absorbing: isSubmitting,
-                    child: PaceSlider(
-                      totalSeconds: state.totalSecondsValue,
-                      accentColor: accent,
-                      onChanged: cubit.setTotalSeconds,
+                    child: Column(
+                      children: [
+                        PaceTimeDisplay(
+                          minutes: state.minutes,
+                          seconds: state.seconds,
+                          onMinutesChanged: cubit.setMinutes,
+                          onSecondsChanged: cubit.setSeconds,
+                          onIncrementMinutes: cubit.incrementMinutes,
+                          onDecrementMinutes: cubit.decrementMinutes,
+                          onIncrementSeconds: cubit.incrementSeconds,
+                          onDecrementSeconds: cubit.decrementSeconds,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text('MIN : SEC / 100M', style: AppTextStyles.caption),
+                        const SizedBox(height: AppSpacing.xl),
+                        PaceLevelDisplay(level: state.swimmerLevel),
+                        const SizedBox(height: AppSpacing.lg),
+                        PaceLevelTabs(activeLevel: state.swimmerLevel),
+                        const SizedBox(height: AppSpacing.lg),
+                        PaceSlider(
+                          totalSeconds: state.totalSecondsValue,
+                          accentColor: accent,
+                          onChanged: cubit.setTotalSeconds,
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
@@ -106,9 +118,9 @@ class _PaceSelectorView extends StatelessWidget {
                     onPressed: cubit.submitPace,
                   ),
                   PaceSkipLink(
-                    onPressed: isSubmitting
+                    onPressed: isSubmitting || _isNavigating
                         ? null
-                        : () => _skipPace(context),
+                        : _skipPace,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                 ],
@@ -120,9 +132,16 @@ class _PaceSelectorView extends StatelessWidget {
     );
   }
 
-  void _skipPace(BuildContext context) {
-    Navigator.of(context).push(
+  Future<void> _skipPace() async {
+    if (_isNavigating) {
+      return;
+    }
+    setState(() => _isNavigating = true);
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => const UserListScreen()),
     );
+    if (mounted) {
+      setState(() => _isNavigating = false);
+    }
   }
 }

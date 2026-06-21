@@ -30,4 +30,21 @@ abstract final class AppTextStyles {
     color: AppColors.textMuted,
     letterSpacing: 1.2,
   );
+
+  static const TextStyle tabLabel = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textMuted,
+  );
+
+  static const TextStyle tickLabel = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+  );
+
+  static const TextStyle buttonLabel = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
 }

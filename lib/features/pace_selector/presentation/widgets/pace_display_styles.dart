@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../theme/pace_ui_constants.dart';
 
 abstract final class PaceDisplayStyles {
   static const TextStyle digit = TextStyle(
@@ -17,11 +18,13 @@ abstract final class PaceDisplayStyles {
     height: 1,
   );
 
-  static const BoxDecoration editingDecoration = BoxDecoration(
+  static final BoxDecoration editingDecoration = BoxDecoration(
     color: AppColors.surface,
-    borderRadius: BorderRadius.all(Radius.circular(8)),
-    border: Border.fromBorderSide(
-      BorderSide(color: AppColors.accent, width: 1.5),
+    borderRadius:
+        BorderRadius.circular(PaceUiConstants.digitBorderRadius),
+    border: Border.all(
+      color: AppColors.accent,
+      width: PaceUiConstants.digitBorderWidth,
     ),
   );
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../logic/pace_input_constants.dart';
 import '../../logic/pace_time_utils.dart';
+import '../theme/pace_ui_constants.dart';
 
 class PaceSlider extends StatelessWidget {
   const PaceSlider({
@@ -22,25 +24,28 @@ class PaceSlider extends StatelessWidget {
     return Column(
       children: [
         SliderTheme(
-          data: SliderThemeData(
-            activeTrackColor: accentColor,
-            inactiveTrackColor: AppColors.divider,
-            thumbColor: accentColor,
-            overlayColor: accentColor.withValues(alpha: 0.12),
-            trackHeight: 4,
-            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+            data: SliderThemeData(
+              activeTrackColor: accentColor,
+              inactiveTrackColor: AppColors.divider,
+              thumbColor: accentColor,
+              overlayColor:
+                  accentColor.withValues(alpha: PaceUiConstants.accentOverlayAlpha),
+              trackHeight: PaceUiConstants.sliderTrackHeight,
+              thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: PaceUiConstants.sliderThumbRadius,
+              ),
+            ),
+            child: Slider(
+              min: PaceInputConstants.minTotalSeconds.toDouble(),
+              max: PaceInputConstants.maxTotalSeconds.toDouble(),
+              value: totalSeconds.toDouble(),
+              onChanged: (value) => onChanged(value.round()),
+            ),
           ),
-          child: Slider(
-            min: PaceInputConstants.minTotalSeconds.toDouble(),
-            max: PaceInputConstants.maxTotalSeconds.toDouble(),
-            value: totalSeconds.toDouble(),
-            onChanged: (value) => onChanged(value.round()),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        _TickLabels(accentColor: accentColor),
-      ],
-    );
+          const SizedBox(height: AppSpacing.xs),
+          _TickLabels(accentColor: accentColor),
+        ],
+      );
   }
 }
 
@@ -55,7 +60,7 @@ class _TickLabels extends StatelessWidget {
         PaceInputConstants.minTotalSeconds;
 
     return SizedBox(
-      height: 20,
+      height: PaceUiConstants.sliderTickAreaHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Stack(
@@ -91,17 +96,22 @@ class _TickLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labelWidth = 36.0;
-    final left = (maxWidth * offsetFraction) - (labelWidth / 2);
+    final left =
+        (maxWidth * offsetFraction) - (PaceUiConstants.sliderTickLabelWidth / 2);
 
     return Positioned(
-      left: left.clamp(0, maxWidth - labelWidth),
+      left: left.clamp(
+        0,
+        maxWidth - PaceUiConstants.sliderTickLabelWidth,
+      ),
       child: SizedBox(
-        width: labelWidth,
+        width: PaceUiConstants.sliderTickLabelWidth,
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11, color: color.withValues(alpha: 0.8)),
+          style: AppTextStyles.tickLabel.copyWith(
+            color: color.withValues(alpha: PaceUiConstants.tickLabelAlpha),
+          ),
         ),
       ),
     );

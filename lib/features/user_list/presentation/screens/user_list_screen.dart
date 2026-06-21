@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/network/network_exception.dart';
+import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../data/models/user_model.dart';
 import '../../data/repository/user_repository_impl.dart';
@@ -47,45 +48,53 @@ class _UserListView extends StatelessWidget {
   }
 }
 
-class _UserListLoadedBody extends StatelessWidget {
+class _UserListLoadedBody extends StatefulWidget {
   const _UserListLoadedBody({required this.state});
 
   final UserListLoaded state;
 
   @override
+  State<_UserListLoadedBody> createState() => _UserListLoadedBodyState();
+}
+
+class _UserListLoadedBodyState extends State<_UserListLoadedBody> {
+  bool _isNavigating = false;
+
+  @override
   Widget build(BuildContext context) {
     final cubit = context.read<UserListCubit>();
-    final visibleUsers = state.filteredUsers;
+    final visibleUsers = widget.state.filteredUsers;
 
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(AppSpacing.md),
           child: UserSearchField(
-            value: state.searchQuery,
+            value: widget.state.searchQuery,
             onChanged: cubit.updateSearchQuery,
           ),
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () => _handleRefresh(context, cubit),
+            onRefresh: () => _handleRefresh(cubit),
             child: visibleUsers.isEmpty
                 ? ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: const [
-                      SizedBox(height: 200),
+                      SizedBox(height: AppSizes.emptyStateSpacerHeight),
                       UserListEmptyBody(),
                     ],
                   )
                 : ListView.separated(
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: visibleUsers.length,
-                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final user = visibleUsers[index];
                       return UserListTile(
                         user: user,
-                        onTap: () => _openUserDetail(context, user),
+                        onTap: () => _openUserDetail(user),
                       );
                     },
                   ),
@@ -95,11 +104,11 @@ class _UserListLoadedBody extends StatelessWidget {
     );
   }
 
-  Future<void> _handleRefresh(BuildContext context, UserListCubit cubit) async {
+  Future<void> _handleRefresh(UserListCubit cubit) async {
     try {
       await cubit.refreshUsers();
     } on NetworkException catch (error) {
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error.message)),
         );
@@ -107,11 +116,18 @@ class _UserListLoadedBody extends StatelessWidget {
     }
   }
 
-  void _openUserDetail(BuildContext context, UserModel user) {
-    Navigator.of(context).push(
+  Future<void> _openUserDetail(UserModel user) async {
+    if (_isNavigating) {
+      return;
+    }
+    setState(() => _isNavigating = true);
+    await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => UserDetailScreen(user: user),
       ),
     );
+    if (mounted) {
+      setState(() => _isNavigating = false);
+    }
   }
 }

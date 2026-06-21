@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/app_messages.dart';
+import '../../../../core/utils/async_utils.dart';
 import '../../../../core/network/network_exception.dart';
 import '../data/repository/pace_repository.dart';
 import 'pace_input_data.dart';
@@ -86,13 +88,15 @@ class PaceCubit extends Cubit<PaceState> {
     emit(PaceSubmitting(input));
 
     try {
-      await _repository.submitPace(input.totalSecondsValue);
+      await withMinLoadingDisplay(
+        _repository.submitPace(input.totalSecondsValue),
+      );
       emit(PaceSubmitSuccess(input));
       emit(PaceIdle(input));
     } on NetworkException catch (error) {
       emit(PaceSubmitError(input, error.message));
     } catch (_) {
-      emit(PaceSubmitError(input, 'Something went wrong. Please try again.'));
+      emit(PaceSubmitError(input, AppMessages.genericError));
     }
   }
 

@@ -17,7 +17,10 @@ class UserListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return Semantics(
+      button: true,
+      label: 'View details for ${user.name}',
+      child: ListTile(
       contentPadding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.xs,
@@ -33,6 +36,7 @@ class UserListTile extends StatelessWidget {
       ),
       trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
       onTap: onTap,
+      ),
     );
   }
 }

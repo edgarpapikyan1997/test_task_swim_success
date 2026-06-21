@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_sizes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -75,7 +76,10 @@ class _ChevronButton extends StatelessWidget {
         onPressed: onPressed,
         icon: Icon(icon, color: AppColors.textSecondary, size: 28),
         padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 36),
+        constraints: const BoxConstraints(
+          minWidth: AppSizes.minTouchTarget,
+          minHeight: AppSizes.minTouchTarget,
+        ),
         visualDensity: VisualDensity.compact,
       ),
     );

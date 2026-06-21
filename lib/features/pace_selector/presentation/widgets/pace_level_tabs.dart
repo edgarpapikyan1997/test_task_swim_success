@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_text_styles.dart';
 import '../../logic/swimmer_level.dart';
+import '../theme/pace_ui_constants.dart';
 import '../theme/swimmer_level_colors.dart';
 
 class PaceLevelTabs extends StatelessWidget {
@@ -41,24 +43,27 @@ class _LevelTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = isActive ? accentColor : AppColors.textMuted;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
-            color: color,
+    return Semantics(
+      label: '$label level',
+      selected: isActive,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: AppTextStyles.tabLabel.copyWith(
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+              color: color,
+            ),
           ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Container(
-          height: 2,
-          width: 48,
-          color: isActive ? accentColor : Colors.transparent,
-        ),
-      ],
+          const SizedBox(height: AppSpacing.xs),
+          Container(
+            height: PaceUiConstants.levelTabUnderlineHeight,
+            width: PaceUiConstants.levelTabUnderlineWidth,
+            color: isActive ? accentColor : Colors.transparent,
+          ),
+        ],
+      ),
     );
   }
 }

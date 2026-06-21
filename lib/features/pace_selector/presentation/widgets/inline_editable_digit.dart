@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../theme/pace_ui_constants.dart';
 import 'pace_display_styles.dart';
 
 /// Using setState here because [_isEditing] is trivial local UI state — it
@@ -88,8 +89,8 @@ class _InlineEditableDigitState extends State<InlineEditableDigit> {
       child: GestureDetector(
         onTap: _isEditing ? null : _startEditing,
         child: Container(
-          width: 88,
-          height: 72,
+          width: PaceUiConstants.digitBoxWidth,
+          height: PaceUiConstants.digitBoxHeight,
           alignment: Alignment.center,
           decoration: _isEditing ? PaceDisplayStyles.editingDecoration : null,
           child: _isEditing ? _buildTextField() : Text(_formattedValue, style: PaceDisplayStyles.digit),

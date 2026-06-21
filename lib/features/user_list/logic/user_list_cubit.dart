@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/constants/app_messages.dart';
+import '../../../../core/utils/async_utils.dart';
 import '../../../../core/network/network_exception.dart';
+import '../data/models/user_model.dart';
 import '../data/repository/user_repository.dart';
 import 'user_list_state.dart';
 
@@ -31,7 +34,9 @@ class UserListCubit extends Cubit<UserListState> {
     }
 
     try {
-      final users = await _repository.getUsers();
+      final users = await _fetchUsers(
+        enforceMinLoadingDisplay: loadedState == null,
+      );
       emit(UserListLoaded(users: users, searchQuery: preservedQuery));
     } on NetworkException catch (error) {
       if (isRefresh && loadedState != null) {
@@ -40,12 +45,22 @@ class UserListCubit extends Cubit<UserListState> {
       }
       emit(UserListError(error.message));
     } catch (_) {
-      const message = 'Something went wrong. Please try again.';
+      const message = AppMessages.genericError;
       if (isRefresh && loadedState != null) {
         emit(loadedState);
         throw const NetworkServerException(message);
       }
       emit(const UserListError(message));
     }
+  }
+
+  Future<List<UserModel>> _fetchUsers({
+    required bool enforceMinLoadingDisplay,
+  }) {
+    final request = _repository.getUsers();
+    if (!enforceMinLoadingDisplay) {
+      return request;
+    }
+    return withMinLoadingDisplay(request);
   }
 }
