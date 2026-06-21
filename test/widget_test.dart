@@ -12,5 +12,6 @@ void main() {
     expect(find.text('30'), findsOneWidget);
     expect(find.text('Advanced'), findsWidgets);
     expect(find.text('1:30'), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
   });
 }
