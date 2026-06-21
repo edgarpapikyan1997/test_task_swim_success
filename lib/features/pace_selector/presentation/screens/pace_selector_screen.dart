@@ -3,8 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../user_list/presentation/screens/user_list_screen.dart';
+import '../../data/repository/pace_repository_impl.dart';
 import '../../logic/pace_cubit.dart';
 import '../../logic/pace_state.dart';
+import '../theme/swimmer_level_colors.dart';
+import '../widgets/pace_continue_button.dart';
+import '../widgets/pace_level_display.dart';
+import '../widgets/pace_level_tabs.dart';
+import '../widgets/pace_progress_bar.dart';
+import '../widgets/pace_screen_header.dart';
+import '../widgets/pace_skip_link.dart';
+import '../widgets/pace_slider.dart';
 import '../widgets/pace_time_display.dart';
 
 class PaceSelectorScreen extends StatelessWidget {
@@ -13,7 +23,7 @@ class PaceSelectorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PaceCubit(),
+      create: (_) => PaceCubit(PaceRepositoryImpl()),
       child: const _PaceSelectorView(),
     );
   }
@@ -24,23 +34,48 @@ class _PaceSelectorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: BlocBuilder<PaceCubit, PaceState>(
-          builder: (context, state) {
-            final input = state as PaceInputState;
-            final cubit = context.read<PaceCubit>();
+    return BlocConsumer<PaceCubit, PaceState>(
+      listenWhen: (previous, current) =>
+          current is PaceSubmitSuccess || current is PaceSubmitError,
+      listener: (context, state) {
+        if (state is PaceSubmitSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pace saved successfully.')),
+          );
+        }
+        if (state is PaceSubmitError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              action: SnackBarAction(
+                label: 'Retry',
+                onPressed: () => context.read<PaceCubit>().submitPace(),
+              ),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final cubit = context.read<PaceCubit>();
+        final isSubmitting = state is PaceSubmitting;
+        final accent = SwimmerLevelColors.accentFor(state.swimmerLevel);
 
-            return Padding(
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Column(
                 children: [
-                  const SizedBox(height: AppSpacing.xxl),
+                  const SizedBox(height: AppSpacing.md),
+                  const PaceProgressBar(),
+                  const SizedBox(height: AppSpacing.xl),
+                  const PaceScreenHeader(),
+                  const SizedBox(height: AppSpacing.xl),
                   Text('YOUR PACE', style: AppTextStyles.label),
                   const SizedBox(height: AppSpacing.lg),
                   PaceTimeDisplay(
-                    minutes: input.minutes,
-                    seconds: input.seconds,
+                    minutes: state.minutes,
+                    seconds: state.seconds,
                     onMinutesChanged: cubit.setMinutes,
                     onSecondsChanged: cubit.setSeconds,
                     onIncrementMinutes: cubit.incrementMinutes,
@@ -50,12 +85,44 @@ class _PaceSelectorView extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text('MIN : SEC / 100M', style: AppTextStyles.caption),
+                  const SizedBox(height: AppSpacing.xl),
+                  PaceLevelDisplay(level: state.swimmerLevel),
+                  const SizedBox(height: AppSpacing.lg),
+                  PaceLevelTabs(activeLevel: state.swimmerLevel),
+                  const SizedBox(height: AppSpacing.lg),
+                  AbsorbPointer(
+                    absorbing: isSubmitting,
+                    child: PaceSlider(
+                      totalSeconds: state.totalSecondsValue,
+                      accentColor: accent,
+                      onChanged: cubit.setTotalSeconds,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  PaceContinueButton(
+                    level: state.swimmerLevel,
+                    isLoading: isSubmitting,
+                    isEnabled: !isSubmitting,
+                    onPressed: cubit.submitPace,
+                  ),
+                  PaceSkipLink(
+                    onPressed: isSubmitting
+                        ? null
+                        : () => _skipPace(context),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
                 ],
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _skipPace(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const UserListScreen()),
     );
   }
 }
