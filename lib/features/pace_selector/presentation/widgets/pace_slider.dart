@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../logic/pace_input_constants.dart';
 import '../../logic/pace_time_utils.dart';
 import '../theme/pace_ui_constants.dart';
+import '../theme/swimmer_level_colors.dart';
+import 'zone_slider_track_shape.dart';
 
 class PaceSlider extends StatelessWidget {
   const PaceSlider({
@@ -21,31 +22,39 @@ class PaceSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final minValue = PaceInputConstants.minTotalSeconds.toDouble();
+    final maxValue = PaceInputConstants.maxTotalSeconds.toDouble();
+
     return Column(
       children: [
         SliderTheme(
-            data: SliderThemeData(
-              activeTrackColor: accentColor,
-              inactiveTrackColor: AppColors.divider,
-              thumbColor: accentColor,
-              overlayColor:
-                  accentColor.withValues(alpha: PaceUiConstants.accentOverlayAlpha),
-              trackHeight: PaceUiConstants.sliderTrackHeight,
-              thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: PaceUiConstants.sliderThumbRadius,
-              ),
+          data: SliderThemeData(
+            activeTrackColor: Colors.transparent,
+            inactiveTrackColor: SwimmerLevelColors.inactiveTrack,
+            thumbColor: accentColor,
+            overlayColor:
+                accentColor.withValues(alpha: PaceUiConstants.accentOverlayAlpha),
+            trackHeight: PaceUiConstants.sliderTrackHeight,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: PaceUiConstants.sliderThumbRadius,
             ),
-            child: Slider(
-              min: PaceInputConstants.minTotalSeconds.toDouble(),
-              max: PaceInputConstants.maxTotalSeconds.toDouble(),
-              value: totalSeconds.toDouble(),
-              onChanged: (value) => onChanged(value.round()),
+            trackShape: ZoneSliderTrackShape(
+              accentColor: accentColor,
+              minValue: minValue,
+              maxValue: maxValue,
             ),
           ),
-          const SizedBox(height: AppSpacing.xs),
-          _TickLabels(accentColor: accentColor),
-        ],
-      );
+          child: Slider(
+            min: minValue,
+            max: maxValue,
+            value: totalSeconds.toDouble(),
+            onChanged: (value) => onChanged(value.round()),
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        _TickLabels(accentColor: accentColor),
+      ],
+    );
   }
 }
 
