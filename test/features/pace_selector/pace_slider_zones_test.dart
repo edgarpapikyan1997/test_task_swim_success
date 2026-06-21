@@ -13,14 +13,14 @@ void main() {
       expect(resolveZone(89), PaceSliderZone.advanced);
     });
 
-    test('returns intermediate from 1:30 through 3:00 boundary', () {
+    test('returns intermediate from 1:30 through 3:30 boundary', () {
       expect(resolveZone(90), PaceSliderZone.intermediate);
       expect(resolveZone(120), PaceSliderZone.intermediate);
-      expect(resolveZone(179), PaceSliderZone.intermediate);
+      expect(resolveZone(209), PaceSliderZone.intermediate);
     });
 
-    test('returns beginner after 3:00 boundary', () {
-      expect(resolveZone(180), PaceSliderZone.beginner);
+    test('returns beginner after 3:30 boundary', () {
+      expect(resolveZone(210), PaceSliderZone.beginner);
       expect(resolveZone(240), PaceSliderZone.beginner);
     });
   });
@@ -30,18 +30,18 @@ void main() {
       expect(fillRangeForZone(PaceSliderZone.elite, 45), (30, 45));
     });
 
-    test('fills from 3:00 boundary in beginner zone', () {
-      expect(fillRangeForZone(PaceSliderZone.beginner, 210), (180, 210));
+    test('fills from 3:30 boundary in beginner zone', () {
+      expect(fillRangeForZone(PaceSliderZone.beginner, 225), (210, 225));
     });
 
     test('fills from zone boundary in advanced zone', () {
       expect(fillRangeForZone(PaceSliderZone.advanced, 80), (70, 80));
     });
 
-    test('intermediate zone spans 1:30 to 3:00', () {
+    test('intermediate zone spans 1:30 to 3:30', () {
       final (start, end) = zoneBounds(PaceSliderZone.intermediate);
       expect(start, 90);
-      expect(end, 180);
+      expect(end, 210);
     });
   });
 }

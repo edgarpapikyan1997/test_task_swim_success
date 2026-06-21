@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../logic/pace_input_constants.dart';
+import '../../logic/pace_slider_scale.dart';
 import '../../logic/pace_slider_zones.dart';
 import '../theme/pace_ui_constants.dart';
 
 class ZoneSliderTrackShape extends SliderTrackShape {
-  const ZoneSliderTrackShape({
-    required this.accentColor,
-    required this.minValue,
-    required this.maxValue,
-  });
+  const ZoneSliderTrackShape({required this.accentColor});
 
   final Color accentColor;
-  final double minValue;
-  final double maxValue;
 
   @override
   Rect getPreferredRect({
@@ -64,15 +59,14 @@ class ZoneSliderTrackShape extends SliderTrackShape {
 
     final fraction =
         ((thumbCenter.dx - trackRect.left) / trackRect.width).clamp(0.0, 1.0);
-    final totalSeconds =
-        (minValue + fraction * (maxValue - minValue)).round();
+    final totalSeconds = PaceSliderScale.fractionToSeconds(fraction);
     final zone = resolveZone(totalSeconds);
     final (fillStartSec, fillEndSec) = fillRangeForZone(zone, totalSeconds);
 
-    final fillStart = trackRect.left +
-        trackRect.width * valueFraction(fillStartSec, minValue, maxValue);
-    final fillEnd = trackRect.left +
-        trackRect.width * valueFraction(fillEndSec, minValue, maxValue);
+    final fillStart =
+        trackRect.left + trackRect.width * PaceSliderScale.secondsToFraction(fillStartSec);
+    final fillEnd =
+        trackRect.left + trackRect.width * PaceSliderScale.secondsToFraction(fillEndSec);
 
     if (fillEnd > fillStart) {
       final fillRect = Rect.fromLTRB(
@@ -97,7 +91,7 @@ class ZoneSliderTrackShape extends SliderTrackShape {
 
     for (final tick in PaceInputConstants.sliderTickSeconds) {
       final x = trackRect.left +
-          trackRect.width * valueFraction(tick, minValue, maxValue);
+          trackRect.width * PaceSliderScale.secondsToFraction(tick);
       canvas.drawLine(
         Offset(x, trackRect.top - 4),
         Offset(x, trackRect.bottom + 4),

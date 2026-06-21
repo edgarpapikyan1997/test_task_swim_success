@@ -13,7 +13,6 @@ abstract final class PaceInputConstants {
   /// Reference labels on the slider (1:10, 1:30, 2:00).
   static const List<int> sliderTickSeconds = [70, 90, 120];
 
-  /// Visual zone boundaries for slider fill — intermediate extends to 3:00 so
-  /// beginner does not dominate the track; ticks remain reference labels only.
-  static const List<int> sliderZoneBoundarySeconds = [70, 90, 180];
+  /// Visual zone boundaries for slider fill — intermediate extends to 3:30.
+  static const List<int> sliderZoneBoundarySeconds = [70, 90, 210];
 }

@@ -88,7 +88,7 @@ Based on **100m freestyle total time** (lower = faster = higher level). These ar
 
 Defined in `lib/features/pace_selector/logic/pace_level_constants.dart`.
 
-Slider range: **0:30 – 4:00** (ticks at 1:10, 1:30, 2:00 as reference labels). Visual fill zones extend intermediate to 3:00 so beginner does not dominate the track. Minutes input capped at 4 to match.
+Slider range: **0:30 – 4:00** (ticks at 1:10, 1:30, 2:00 as reference labels). The 1:30–2:00 band uses a stretched non-linear scale for easier adjustment; visual fill zones extend intermediate to 3:30. Minutes input capped at 4 to match.
 
 ## Networking
 
